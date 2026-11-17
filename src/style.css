@@ -1,0 +1,225 @@
+/* Hallmark · shape: app screen · genre: atmospheric · theme: custom (after the owner's reference image)
+ * paper: oklch(18% 0.035 265) · accent: oklch(80% 0.2 150) · display: Figtree · body: Figtree
+ * nav: none, one screen with a period switcher · signature: the three envelopes, each with its own bar · states: empty, full, over budget
+ * axes: night/sans/green · posture: single column, phone first · contrast: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R3 V4 · weakest: R, the reference fixes the look, so the craft goes into states and numbers */
+/* Hallmark · waive F5 · .cat-icon · the round category coins are in the owner's reference image */
+/* Hallmark · waive F7 · .bar-track, .period, .tabs · bars and switchers are pill-shaped in the owner's reference */
+@import url("./tokens.css");
+@import url("./base.css");
+
+body {
+  background: var(--color-paper);
+  min-height: 100dvh;
+}
+
+.app {
+  max-width: 30rem;
+  margin-inline: auto;
+  padding: var(--space-md) var(--space-md) var(--space-2xl);
+  display: grid;
+  gap: var(--space-md);
+}
+
+/* top */
+.top { display: grid; gap: var(--space-sm); justify-items: center; padding-top: var(--space-xs); }
+.top h1 { font-size: var(--text-2xl); font-weight: 700; letter-spacing: var(--tracking-display); }
+.period {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  align-items: center;
+  width: 100%;
+  background: var(--color-paper-2);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-pill);
+  padding: var(--space-2xs);
+  text-align: center;
+}
+.period strong { display: block; font-size: var(--text-md); }
+.period span { font-size: var(--text-sm); color: var(--color-muted); }
+
+.icon-btn {
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  border: 0; border-radius: var(--radius-pill);
+  background: transparent; color: var(--color-ink);
+  cursor: pointer;
+  transition: background-color var(--dur-micro) var(--ease-out), opacity var(--dur-micro);
+}
+.icon-btn:hover { background: var(--color-paper-3); }
+.icon-btn:active { transform: scale(0.94); }
+.icon-btn:disabled { color: var(--color-rule); cursor: not-allowed; background: transparent; }
+.icon-btn svg { width: 20px; height: 20px; }
+
+/* panel */
+.panel {
+  background: var(--color-paper-2);
+  color: var(--color-ink);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-card);
+  padding: var(--space-md);
+}
+
+/* summary */
+.summary { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: var(--space-md); align-items: center; }
+.ring { position: relative; width: 112px; height: 112px; }
+.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring circle { fill: none; stroke-width: 10; }
+.ring .track { stroke: var(--color-track); }
+.ring .fill { stroke: var(--color-accent); stroke-linecap: round; transition: stroke-dashoffset var(--dur-long) var(--ease-out); }
+.ring.over .fill { stroke: var(--color-warn); }
+.ring-label { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.ring-label strong { font-size: var(--text-xl); line-height: 1.1; }
+.ring-label span { font-size: var(--text-sm); color: var(--color-muted); }
+
+.totals { display: grid; margin: 0; }
+.totals div { display: flex; justify-content: space-between; gap: var(--space-xs); padding-block: var(--space-xs); border-bottom: 1px solid var(--color-rule); }
+.totals div:last-child { border-bottom: 0; }
+.totals dt { color: var(--color-ink-2); }
+.totals dd { margin: 0; font-weight: 700; }
+.totals .left dd { color: var(--color-accent); font-size: var(--text-lg); }
+.totals .left.over dd { color: var(--color-warn); }
+
+/* envelopes, the signature */
+.cats { display: grid; gap: var(--space-sm); list-style: none; margin: 0; padding: 0; }
+.cat {
+  --c: var(--color-cat-1);
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  gap: var(--space-xs) var(--space-sm);
+  align-items: center;
+  background: color-mix(in oklab, var(--c) 12%, var(--color-paper-2));
+  border: 1px solid color-mix(in oklab, var(--c) 55%, transparent);
+  border-radius: var(--radius-card);
+  padding: var(--space-md);
+}
+.cat[data-cat="leuk"] { --c: var(--color-cat-2); }
+.cat[data-cat="benzine"] { --c: var(--color-cat-3); }
+.cat-icon {
+  width: 48px; height: 48px; border-radius: var(--radius-pill);
+  display: grid; place-items: center;
+  background: color-mix(in oklab, var(--c) 22%, transparent);
+  color: var(--c);
+  grid-row: span 2;
+}
+.cat-icon svg { width: 24px; height: 24px; }
+.cat h2 { font-size: var(--text-lg); font-weight: 700; }
+.cat .budget { font-size: var(--text-sm); color: var(--color-muted); }
+.cat .spent { text-align: right; font-weight: 700; font-size: var(--text-lg); }
+.cat .rest { text-align: right; font-size: var(--text-sm); color: var(--color-ink-2); }
+.cat .rest.over { color: var(--color-warn); }
+.bar { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) 3.5ch; gap: var(--space-sm); align-items: center; }
+.bar-track { height: 10px; border-radius: var(--radius-pill); background: var(--color-track); overflow: hidden; }
+.bar-fill { height: 100%; width: 100%; border-radius: inherit; background: var(--c); transform-origin: left; transform: scaleX(0); transition: transform var(--dur-long) var(--ease-out); }
+.bar-fill.over { background: var(--color-warn); }
+.bar .pct { font-size: var(--text-sm); color: var(--color-ink-2); text-align: right; }
+
+/* per week / per dag */
+.tabs { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2xs); background: var(--color-paper); border-radius: var(--radius-pill); padding: var(--space-2xs); }
+.tab {
+  min-height: 44px; border: 0; border-radius: var(--radius-pill);
+  background: transparent; color: var(--color-ink-2); font-weight: 600; cursor: pointer;
+  transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro);
+}
+.tab:hover { color: var(--color-ink); }
+.tab[aria-selected="true"] { background: var(--color-accent); color: var(--color-accent-ink); }
+.allow-note { font-size: var(--text-sm); color: var(--color-muted); margin-top: var(--space-sm); text-align: center; }
+.allow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: var(--space-sm) 0 0; padding: 0; list-style: none; }
+.allow li { text-align: center; padding-inline: var(--space-2xs); border-left: 1px solid var(--color-rule); }
+.allow li:first-child { border-left: 0; }
+.allow span { display: block; font-size: var(--text-sm); color: var(--color-ink-2); }
+.allow strong { font-size: var(--text-lg); }
+
+/* afboeken */
+.primary {
+  width: 100%; min-height: 56px;
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-xs);
+  border: 0; border-radius: var(--radius-pill);
+  background: var(--color-accent); color: var(--color-accent-ink);
+  font-size: var(--text-lg); font-weight: 700; cursor: pointer;
+  transition: filter var(--dur-micro) var(--ease-out), transform var(--dur-micro) var(--ease-out);
+}
+.primary:hover { filter: brightness(1.08); }
+.primary:active { transform: scale(0.98); }
+.primary:disabled { background: var(--color-paper-3); color: var(--color-muted); cursor: not-allowed; }
+.primary svg { width: 22px; height: 22px; }
+
+.book { display: grid; gap: var(--space-sm); }
+.book h2 { font-size: var(--text-lg); font-weight: 700; }
+.field { display: grid; gap: var(--space-2xs); }
+.field label, .field legend { font-size: var(--text-sm); color: var(--color-ink-2); padding: 0; }
+fieldset.field { border: 0; margin: 0; padding: 0; }
+.input {
+  min-height: 48px; padding: 0 var(--space-sm);
+  border-radius: var(--radius-control);
+  border: 1px solid var(--color-rule);
+  background: var(--color-paper); color: var(--color-ink);
+  font-size: var(--text-lg);
+  transition: border-color var(--dur-micro);
+}
+.input:hover { border-color: var(--color-muted); }
+.input:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 1px; border-color: var(--color-accent); }
+.input[aria-invalid="true"] { border-color: var(--color-warn); }
+.input::placeholder { color: var(--color-muted); }
+.error { font-size: var(--text-sm); color: var(--color-warn); min-height: 1.2em; }
+.choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-xs); }
+.choice { position: relative; }
+.choice input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.choice span {
+  display: grid; place-items: center; min-height: 48px; padding: var(--space-2xs);
+  border-radius: var(--radius-control); border: 1px solid var(--color-rule);
+  background: var(--color-paper); font-size: var(--text-sm); font-weight: 600; text-align: center;
+  transition: border-color var(--dur-micro), background-color var(--dur-micro);
+}
+.choice:hover span { border-color: var(--color-muted); }
+.choice input:checked + span { border-color: var(--c); background: color-mix(in oklab, var(--c) 18%, var(--color-paper)); color: var(--color-ink); }
+.choice input:focus-visible + span { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.choice[data-cat="boodschappen"] { --c: var(--color-cat-1); }
+.choice[data-cat="leuk"] { --c: var(--color-cat-2); }
+.choice[data-cat="benzine"] { --c: var(--color-cat-3); }
+.row { display: flex; gap: var(--space-xs); }
+.ghost {
+  min-height: 48px; padding: 0 var(--space-md);
+  border-radius: var(--radius-pill); border: 1px solid var(--color-rule);
+  background: transparent; color: var(--color-ink); font-weight: 600; cursor: pointer;
+  transition: background-color var(--dur-micro), border-color var(--dur-micro);
+}
+.ghost:hover { background: var(--color-paper-3); }
+.ghost:active { transform: scale(0.98); }
+.row .primary { flex: 1; min-height: 48px; font-size: var(--text-md); }
+
+/* voortgang */
+.progress h2, .list h2 { font-size: var(--text-lg); font-weight: 700; margin-bottom: var(--space-sm); }
+.prog { display: grid; gap: var(--space-2xs); padding-block: var(--space-sm); border-top: 1px solid var(--color-rule); }
+.prog-head { display: flex; justify-content: space-between; gap: var(--space-xs); flex-wrap: wrap; }
+.prog-head span { color: var(--color-muted); font-size: var(--text-sm); }
+.prog .bar { --c: var(--color-accent); }
+.prog.week .bar { --c: var(--color-cat-3); }
+
+/* uitgaven */
+.items { list-style: none; margin: 0; padding: 0; }
+.item { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto 44px; gap: var(--space-sm); align-items: center; padding-block: var(--space-xs); border-top: 1px solid var(--color-rule); }
+.item .swatch { width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--c); }
+.item[data-cat="boodschappen"] { --c: var(--color-cat-1); }
+.item[data-cat="leuk"] { --c: var(--color-cat-2); }
+.item[data-cat="benzine"] { --c: var(--color-cat-3); }
+.item .what { min-width: 0; overflow-wrap: anywhere; }
+.item .what span { display: block; font-size: var(--text-sm); color: var(--color-muted); }
+.item .amt { font-weight: 700; }
+.empty { color: var(--color-muted); padding-block: var(--space-sm); border-top: 1px solid var(--color-rule); }
+
+/* instellingen */
+details.settings summary { cursor: pointer; font-weight: 700; font-size: var(--text-lg); min-height: 44px; display: flex; align-items: center; }
+details.settings summary:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; border-radius: var(--radius-control); }
+.settings-grid { display: grid; gap: var(--space-sm); margin-top: var(--space-sm); }
+
+.toast {
+  position: fixed; left: 50%; bottom: var(--space-lg); z-index: var(--z-toast);
+  translate: -50% 0;
+  display: flex; gap: var(--space-sm); align-items: center;
+  background: var(--color-paper-3); color: var(--color-ink);
+  border: 1px solid var(--color-rule); border-radius: var(--radius-pill);
+  padding: var(--space-xs) var(--space-xs) var(--space-xs) var(--space-md);
+}
+.toast button { min-height: 40px; border: 0; border-radius: var(--radius-pill); background: var(--color-ink); color: var(--color-paper); padding: 0 var(--space-md); font-weight: 700; cursor: pointer; }
+.toast button:hover { background: var(--color-ink-2); }

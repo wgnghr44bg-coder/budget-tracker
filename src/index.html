@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#151a2b">
+<title>Budget Tracker</title>
+<meta name="description" content="Eenvoudige budget tracker voor boodschappen, leuke dingen en benzine.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="app">
+
+  <header class="top">
+    <h1>Budget Tracker</h1>
+    <div class="period">
+      <button class="icon-btn" id="prev" type="button" aria-label="Vorige periode">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div>
+        <strong id="periodLabel">Deze periode</strong>
+        <span id="periodSub">Budgetperiode</span>
+      </div>
+      <button class="icon-btn" id="next" type="button" aria-label="Volgende periode">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <section class="panel summary" aria-label="Samenvatting">
+    <div class="ring" id="ring">
+      <svg viewBox="0 0 120 120" aria-hidden="true">
+        <circle class="track" cx="60" cy="60" r="52"/>
+        <circle class="fill" id="ringFill" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73"/>
+      </svg>
+      <div class="ring-label"><strong class="num" id="ringPct">0%</strong><span>verbruikt</span></div>
+    </div>
+    <dl class="totals">
+      <div><dt>Maandbudget</dt><dd class="num" id="tBudget">€ 950,00</dd></div>
+      <div><dt>Uitgegeven</dt><dd class="num" id="tSpent">€ 0,00</dd></div>
+      <div class="left" id="tLeftRow"><dt>Resterend</dt><dd class="num" id="tLeft">€ 950,00</dd></div>
+    </dl>
+  </section>
+
+  <ul class="cats" id="cats" aria-label="Categorieën"></ul>
+
+  <section class="panel" aria-label="Wat je nog kunt uitgeven">
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tabWeek" aria-selected="true" type="button">Per week</button>
+      <button class="tab" role="tab" id="tabDay" aria-selected="false" type="button">Per dag</button>
+    </div>
+    <ul class="allow" id="allow"></ul>
+    <p class="allow-note" id="allowNote">Wat je nog kunt uitgeven tot het eind van de periode.</p>
+  </section>
+
+  <button class="primary" id="openBook" type="button" aria-expanded="false" aria-controls="book">
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+    Afboeken
+  </button>
+
+  <form class="panel book" id="book" hidden novalidate>
+    <h2>Uitgave afboeken</h2>
+    <div class="field">
+      <label for="amount">Bedrag (€)</label>
+      <input class="input num" id="amount" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-describedby="amountErr">
+      <p class="error" id="amountErr" aria-live="polite"></p>
+    </div>
+    <fieldset class="field">
+      <legend>Categorie</legend>
+      <div class="choices" id="choices"></div>
+    </fieldset>
+    <div class="field">
+      <label for="note">Omschrijving (mag leeg)</label>
+      <input class="input" id="note" autocomplete="off" placeholder="bv. Albert Heijn">
+    </div>
+    <div class="field">
+      <label for="date">Datum</label>
+      <input class="input" id="date" type="date">
+    </div>
+    <div class="row">
+      <button class="ghost" type="button" id="cancelBook">Annuleren</button>
+      <button class="primary" type="submit">Opslaan</button>
+    </div>
+  </form>
+
+  <section class="panel progress" aria-label="Voortgang">
+    <h2>Voortgang</h2>
+    <div class="prog week">
+      <div class="prog-head"><strong>Deze week <span id="weekRange"></span></strong><span class="num" id="weekNums"></span></div>
+      <div class="bar"><div class="bar-track"><div class="bar-fill" id="weekBar"></div></div><span class="pct num" id="weekPct">0%</span></div>
+    </div>
+    <div class="prog">
+      <div class="prog-head"><strong>Deze periode <span id="monthRange"></span></strong><span class="num" id="monthNums"></span></div>
+      <div class="bar"><div class="bar-track"><div class="bar-fill" id="monthBar"></div></div><span class="pct num" id="monthPct">0%</span></div>
+    </div>
+  </section>
+
+  <section class="panel list" aria-label="Uitgaven">
+    <h2>Uitgaven</h2>
+    <ul class="items" id="items"></ul>
+    <p class="empty" id="empty">Nog niets afgeboekt in deze periode. Tik op Afboeken als je iets hebt uitgegeven.</p>
+  </section>
+
+  <details class="panel settings">
+    <summary>Instellingen</summary>
+    <form class="settings-grid" id="settings">
+      <div class="field"><label for="bBood">Budget boodschappen (€)</label><input class="input num" id="bBood" inputmode="decimal"></div>
+      <div class="field"><label for="bLeuk">Budget leuke dingen (€)</label><input class="input num" id="bLeuk" inputmode="decimal"></div>
+      <div class="field"><label for="bBenz">Budget benzine (€)</label><input class="input num" id="bBenz" inputmode="decimal"></div>
+      <div class="field"><label for="startDay">Periode begint op dag</label><input class="input num" id="startDay" type="number" min="1" max="28"></div>
+      <button class="primary" type="submit">Bewaren</button>
+    </form>
+  </details>
+
+</main>
+
+<div class="toast" id="toast" role="status" hidden><span id="toastText"></span><button type="button" id="undo">Ongedaan maken</button></div>
+
+<script src="app.js"></script>
+</body>
+</html>
