@@ -144,6 +144,23 @@ body {
 .primary:disabled { background: var(--color-paper-3); color: var(--color-muted); cursor: not-allowed; }
 .primary svg { width: 22px; height: 22px; }
 
+.actions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-xs); }
+.secondary {
+  min-height: 56px;
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-xs);
+  border: 2px solid var(--color-accent); border-radius: var(--radius-pill);
+  background: transparent; color: var(--color-accent);
+  font-size: var(--text-lg); font-weight: 700; cursor: pointer;
+  transition: background-color var(--dur-micro) var(--ease-out), transform var(--dur-micro) var(--ease-out);
+}
+.secondary:hover { background: color-mix(in oklab, var(--color-accent) 12%, transparent); }
+.secondary:active { transform: scale(0.98); }
+.secondary svg { width: 22px; height: 22px; }
+.book-hint { font-size: var(--text-sm); color: var(--color-muted); }
+.item .amt.plus { color: var(--color-accent); }
+.reset { width: 100%; margin-top: var(--space-sm); color: var(--color-warn); border-color: color-mix(in oklab, var(--color-warn) 45%, transparent); }
+.reset:hover { background: color-mix(in oklab, var(--color-warn) 12%, transparent); }
+.reset:disabled { color: var(--color-rule); border-color: var(--color-rule); background: transparent; cursor: not-allowed; }
 .book { display: grid; gap: var(--space-sm); }
 .book h2 { font-size: var(--text-lg); font-weight: 700; }
 .field { display: grid; gap: var(--space-2xs); }

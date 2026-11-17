@@ -36,7 +36,7 @@
   }
   const inRange = (s, a, b) => { const d = parseIso(s); return d >= a && d <= b; };
   const total = () => CATS.reduce((s, c) => s + (state.budgets[c.id] || 0), 0);
-  const pct = (a, b) => (b > 0 ? Math.round((a / b) * 100) : 0);
+  const pct = (a, b) => (b > 0 ? Math.max(0, Math.round((a / b) * 100)) : 0);
 
   function bar(el, p) {
     el.style.transform = `scaleX(${Math.min(p, 100) / 100})`;
@@ -108,12 +108,13 @@
       const label = i.note ? escapeHtml(i.note) : c.name;
       return `<li class="item" data-cat="${i.cat}"><span class="swatch" aria-hidden="true"></span>
         <div class="what">${label}<span>${c.name}, ${dShort.format(parseIso(i.date))}</span></div>
-        <span class="amt num">${money(i.amount)}</span>
-        <button class="icon-btn" type="button" data-del="${i.id}" aria-label="Verwijder ${label} ${money(i.amount)}">
+        <span class="amt num${i.amount < 0 ? ' plus' : ''}">${i.amount < 0 ? '+ ' + money(-i.amount) : money(i.amount)}</span>
+        <button class="icon-btn" type="button" data-del="${i.id}" aria-label="Verwijder ${label} ${money(Math.abs(i.amount))}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>
         </button></li>`;
     }).join('');
     $('empty').hidden = sorted.length > 0;
+    $('reset').disabled = state.items.length === 0;
   }
 
   function escapeHtml(s) { return s.replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
@@ -140,14 +141,25 @@
 
   // afboeken
   $('choices').innerHTML = CATS.map((c, i) => `<label class="choice" data-cat="${c.id}"><input type="radio" name="cat" value="${c.id}"${i === 0 ? ' checked' : ''}><span>${c.name}</span></label>`).join('');
-  const book = $('book'), openBtn = $('openBook');
-  const showBook = (show) => {
-    book.hidden = !show; openBtn.hidden = show;
-    openBtn.setAttribute('aria-expanded', show);
-    if (show) { $('date').value = iso(today()); $('amount').focus(); }
-    else { book.reset(); $('amountErr').textContent = ''; $('amount').removeAttribute('aria-invalid'); openBtn.focus(); }
+  const book = $('book'), openBtn = $('openBook'), bijBtn = $('openBij');
+  let bookMode = 'af';
+  const showBook = (show, m) => {
+    if (m) bookMode = m;
+    book.hidden = !show; $('actions').hidden = show;
+    openBtn.setAttribute('aria-expanded', show && bookMode === 'af');
+    bijBtn.setAttribute('aria-expanded', show && bookMode === 'bij');
+    if (show) {
+      $('bookTitle').textContent = bookMode === 'bij' ? 'Bedrag bijboeken' : 'Uitgave afboeken';
+      $('bookHint').hidden = bookMode !== 'bij';
+      $('note').placeholder = bookMode === 'bij' ? 'bv. statiegeld terug' : 'bv. Albert Heijn';
+      $('date').value = iso(today()); $('amount').focus();
+    } else {
+      book.reset(); $('amountErr').textContent = ''; $('amount').removeAttribute('aria-invalid');
+      (bookMode === 'bij' ? bijBtn : openBtn).focus();
+    }
   };
-  openBtn.addEventListener('click', () => showBook(true));
+  openBtn.addEventListener('click', () => showBook(true, 'af'));
+  bijBtn.addEventListener('click', () => showBook(true, 'bij'));
   $('cancelBook').addEventListener('click', () => showBook(false));
   book.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -157,9 +169,18 @@
       $('amount').setAttribute('aria-invalid', 'true'); $('amount').focus(); return;
     }
     const cat = book.querySelector('input[name="cat"]:checked').value;
-    state.items.push({ id: Date.now(), amount, cat, note: $('note').value.trim(), date: $('date').value || iso(today()) });
+    const bij = bookMode === 'bij';
+    state.items.push({ id: Date.now(), amount: bij ? -amount : amount, cat, note: $('note').value.trim(), date: $('date').value || iso(today()) });
     save(); offset = 0; showBook(false); render();
-    toast(`${money(amount)} afgeboekt`, null);
+    toast(`${money(amount)} ${bij ? 'bijgeboekt' : 'afgeboekt'}`, null);
+  });
+
+  // reset: alle uitgaven wissen, met ongedaan maken
+  $('reset').addEventListener('click', () => {
+    if (!state.items.length) return;
+    const backup = state.items;
+    state.items = []; save(); offset = 0; render();
+    toast(`${backup.length} ${backup.length === 1 ? 'boeking' : 'boekingen'} gewist`, () => { state.items = backup; save(); render(); });
   });
 
   // verwijderen met ongedaan maken

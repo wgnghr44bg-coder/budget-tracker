@@ -56,13 +56,20 @@
     <p class="allow-note" id="allowNote">Wat je nog kunt uitgeven tot het eind van de periode.</p>
   </section>
 
-  <button class="primary" id="openBook" type="button" aria-expanded="false" aria-controls="book">
-    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-    Afboeken
-  </button>
+  <div class="actions" id="actions">
+    <button class="primary" id="openBook" type="button" aria-expanded="false" aria-controls="book">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M5 12h14"/></svg>
+      Afboeken
+    </button>
+    <button class="secondary" id="openBij" type="button" aria-expanded="false" aria-controls="book">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      Bijboeken
+    </button>
+  </div>
 
   <form class="panel book" id="book" hidden novalidate>
-    <h2>Uitgave afboeken</h2>
+    <h2 id="bookTitle">Uitgave afboeken</h2>
+    <p class="book-hint" id="bookHint" hidden>Geld terug of extra erbij: dit komt bij het resterende bedrag van de categorie.</p>
     <div class="field">
       <label for="amount">Bedrag (€)</label>
       <input class="input num" id="amount" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-describedby="amountErr">
@@ -102,6 +109,7 @@
     <h2>Uitgaven</h2>
     <ul class="items" id="items"></ul>
     <p class="empty" id="empty">Nog niets afgeboekt in deze periode. Tik op Afboeken als je iets hebt uitgegeven.</p>
+    <button class="ghost reset" id="reset" type="button">Reset: alle uitgaven wissen</button>
   </section>
 
   <details class="panel settings">
