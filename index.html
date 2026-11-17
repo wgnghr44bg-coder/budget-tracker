@@ -156,7 +156,9 @@ body {
   grid-row: span 2;
 }
 .cat-icon svg { width: 24px; height: 24px; }
-.cat h2 { font-size: var(--text-lg); font-weight: 700; }
+.cat h2 { font-size: var(--text-lg); font-weight: 700; overflow-wrap: normal; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cat .budget, .cat .rest { white-space: nowrap; }
+@media (max-width: 24rem) { .cat { grid-template-columns: 40px minmax(0, 1fr) auto; padding: var(--space-sm); } .cat-icon { width: 40px; height: 40px; } .cat h2 { font-size: var(--text-md); } .cat .spent { font-size: var(--text-md); } .cat .rest, .cat .budget { font-size: var(--text-xs); } }
 .cat .budget { font-size: var(--text-sm); color: var(--color-muted); }
 .cat .spent { text-align: right; font-weight: 700; font-size: var(--text-lg); }
 .cat .rest { text-align: right; font-size: var(--text-sm); color: var(--color-ink-2); }
@@ -330,17 +332,6 @@ details.settings summary:focus-visible { outline: 2px solid var(--color-focus); 
     </dl>
   </section>
 
-  <ul class="cats" id="cats" aria-label="Categorieën"></ul>
-
-  <section class="panel" aria-label="Wat je nog kunt uitgeven">
-    <div class="tabs" role="tablist">
-      <button class="tab" role="tab" id="tabWeek" aria-selected="true" type="button">Per week</button>
-      <button class="tab" role="tab" id="tabDay" aria-selected="false" type="button">Per dag</button>
-    </div>
-    <ul class="allow" id="allow"></ul>
-    <p class="allow-note" id="allowNote">Wat je nog kunt uitgeven tot het eind van de periode.</p>
-  </section>
-
   <div class="actions" id="actions">
     <button class="primary" id="openBook" type="button" aria-expanded="false" aria-controls="book">
       <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M5 12h14"/></svg>
@@ -377,6 +368,17 @@ details.settings summary:focus-visible { outline: 2px solid var(--color-focus); 
       <button class="primary" type="submit">Opslaan</button>
     </div>
   </form>
+
+  <ul class="cats" id="cats" aria-label="Categorieën"></ul>
+
+  <section class="panel" aria-label="Wat je nog kunt uitgeven">
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tabWeek" aria-selected="true" type="button">Per week</button>
+      <button class="tab" role="tab" id="tabDay" aria-selected="false" type="button">Per dag</button>
+    </div>
+    <ul class="allow" id="allow"></ul>
+    <p class="allow-note" id="allowNote">Wat je nog kunt uitgeven tot het eind van de periode.</p>
+  </section>
 
   <section class="panel progress" aria-label="Voortgang">
     <h2>Voortgang</h2>
